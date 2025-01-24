@@ -1,0 +1,48 @@
+name: Collect logs using juju-k8s-crashdump
+description: Use-juju-k8s-crashdump to collect logs
+
+inputs:
+  kubeconf:
+    description: "Path to a kubeconf"
+    required: true
+  controller:
+    description: "Name of a controller to collect logs for"
+    required: true
+  proxy:
+    description: "url for the a proxy to connect to pip with"
+    required: false
+    default: ""
+outputs:
+  crashdump_path:
+    description: "Absolute path to the created crashdump"
+    value: ${{ steps.logs.outputs.path }}
+runs:
+  using: "composite"
+  steps:
+  - name: Clone repo
+    uses: actions/checkout@v3
+    with:
+      repository: canonical/juju-k8s-crashdump
+  - name: install pipx
+    shell: bash
+    run: |
+      sudo apt-get update --quiet
+      sudo apt-get install pipx --quiet --assume-ytes
+  - name: Setup pip proxy
+    if: ${{inputs.proxy != ""}}
+    shell: bash
+    run: |
+      sudo tee /etc/pip.conf <<EOF
+      [global]
+      proxy=${{inputs.proxy}}
+      EOF
+  - name: Install
+    shell: bash
+    run: |
+      pipx install poetry==1.6
+      pipx install .
+  - name: Collect Logs
+    shell: bash
+    run: |
+      juju-k8s-crashdump ${{inputs.kubeconf}} ${{inputs.controller}}
+      echo "path=$(find \"$(pwd)\" -name \"*.tar.gz\")" >> $GITHUB_OUTPUT
