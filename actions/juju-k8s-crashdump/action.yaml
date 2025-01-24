@@ -29,7 +29,7 @@ runs:
       sudo apt-get update --quiet
       sudo apt-get install pipx --quiet --assume-ytes
   - name: Setup pip proxy
-    if: ${{inputs.proxy != ""}}
+    if: ${{inputs.proxy}} != ""
     shell: bash
     run: |
       sudo tee /etc/pip.conf <<EOF
