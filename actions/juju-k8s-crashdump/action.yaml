@@ -20,7 +20,7 @@ runs:
   using: "composite"
   steps:
   - name: Clone repo
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
     with:
       repository: canonical/juju-k8s-crashdump
   - name: install pipx
@@ -46,3 +46,7 @@ runs:
     run: |
       juju-k8s-crashdump ${{inputs.kubeconf}} ${{inputs.controller}}
       echo "path=$(find \"$(pwd)\" -name \"*.tar.gz\")" >> $GITHUB_OUTPUT
+  - name: Return To the Previous directory
+    shell: bash
+    run: |
+      cd ..
