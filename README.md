@@ -31,8 +31,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more information about development be
 
 ## TODO
 
-* [ ] Snap this project
-* [ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing
-* [ ] Add unittests
-* [ ] Add linting actions
-* [ ] Use [COG](https://github.com/nedbat/cog) for readme formatting
+- [ ] Snap this project
+- [ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing
+- [ ] Add unittests
+- [ ] Add linting actions
+- [ ] Use [COG](https://github.com/nedbat/cog) for readme formatting

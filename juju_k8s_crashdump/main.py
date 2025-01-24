@@ -37,6 +37,16 @@ def write_resource_info_to_file(kubectl_client: KubectlCmdClient, namespace: str
                 f.write(kubectl_client.pod_logs(namespace, name))
 
 
+def os_mkdir(path: str):
+    os.mkdir(path)
+    return path
+
+
+def write_tar(tar_path: str, directory: str):
+    with tarfile.open(tar_path, "w:gz") as tar:
+        tar.add(directory)
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
@@ -46,14 +56,11 @@ def main():
     kubectl_client = KubectlCmdClient(args.kubeconf)
     with TemporaryDirectory() as tempdir:
         for namespace in get_namespaces(juju_client, args.controller):
-            namespace_dir = f"{tempdir}/{namespace}"
-            os.mkdir(namespace_dir)
+            namespace_dir = os_mkdir(f"{tempdir}/{namespace}")
             for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service"]:
-                resource_dir = f"{namespace_dir}/{resource_type}"
-                os.mkdir(resource_dir)
+                resource_dir = os_mkdir(f"{namespace_dir}/{resource_type}")
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
-        with tarfile.open(output_tar, "w:gz") as tar:
-            tar.add(tempdir)
+        write_tar(output_tar, tempdir)
     print(f"Log tarfile written to {output_tar}")
 
 
