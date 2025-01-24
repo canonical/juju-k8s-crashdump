@@ -27,7 +27,7 @@ runs:
     shell: bash
     run: |
       sudo apt-get update --quiet
-      sudo apt-get install pipx --quiet --assume-ytes
+      sudo apt-get install pipx --quiet --assume-yes
   - name: Setup pip proxy
     if: ${{inputs.proxy}} != ""
     shell: bash
