@@ -1,6 +1,7 @@
 # Overview
 
-A tool for dumping pod logs and describing k8s resources owned or created by a juju controller and its models. 
+A tool for dumping pod logs and describing k8s resources owned or created by a juju controller and
+its models.
 
 ## Getting Started
 
@@ -28,7 +29,6 @@ options:
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more information about development best practices.
 
 ## TODO
-[ ] Snap this project
-[ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing
-[ ] Add unittests
+
+[ ] Snap this project [ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing [ ] Add unittests
 [ ] Add linting actions

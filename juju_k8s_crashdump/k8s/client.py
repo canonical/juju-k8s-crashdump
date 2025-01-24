@@ -5,7 +5,6 @@ from abc import ABC, abstractmethod
 
 
 class KubectlClient(ABC):
-
     @abstractmethod
     def get_resources(self, namespace: str, resource: str) -> list[str]:
         raise NotImplementedError

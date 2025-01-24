@@ -5,23 +5,17 @@
 import argparse
 import os
 import tarfile
-
 from datetime import datetime
 from tempfile import TemporaryDirectory
+
 from .juju_cmd import JujuCmdClient
 from .k8s_cmd import KubectlCmdClient
 
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Collect logs for standard resources juju creates in kubernetes")
-    parser.add_argument(
-            "kubeconf",
-            help="Path to a kubeconf with permissions to reach the resources juju creatres"
-        )
-    parser.add_argument(
-            "controller",
-            help="Name of the controller to get logs for"
-        )
+    parser.add_argument("kubeconf", help="Path to a kubeconf with permissions to reach the resources juju creatres")
+    parser.add_argument("controller", help="Name of the controller to get logs for")
     return parser
 
 

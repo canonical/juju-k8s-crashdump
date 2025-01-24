@@ -18,11 +18,13 @@ class JujuCmdClient(JujuClient):
         return self.cmd_client.call(CmdArg(value="juju"), *args)
 
     def models(self, controller: str) -> list[str]:
-        return [model["short-name"] for model in yaml.safe_load(
-                    self._call_juju(
-                        CmdArg(value="models"),
-                        CmdArg(value=controller, name="controller"),
-                        CmdArg(value="yaml", name="format")
-                    )
-                )["models"]
-                ]
+        return [
+            model["short-name"]
+            for model in yaml.safe_load(
+                self._call_juju(
+                    CmdArg(value="models"),
+                    CmdArg(value=controller, name="controller"),
+                    CmdArg(value="yaml", name="format"),
+                )
+            )["models"]
+        ]
