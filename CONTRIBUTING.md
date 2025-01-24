@@ -1,8 +1,8 @@
-# Contributing to Charm Integration Testing
+# Contributing to Juju K8s Crashdump
 
 ## Introduction
 
-This document provides the information needed to contribute to Charm Integration Testing.
+This document provides the information needed to contribute to Juju K8s Crashdump.
 
 ## General recommendations
 
@@ -24,6 +24,8 @@ Requests to this repository. To format, run:
 ...
 
 ## Project Structure
+
+...
 
 ## Testing
 

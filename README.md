@@ -9,6 +9,7 @@ This package can be installed via pip and then called as a command line tool
 
 ```
 pipx install .
+
 juju-crashdump-k8s --help
 
 usage: juju-k8s-crashdump [-h] kubeconf controller
@@ -30,5 +31,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more information about development be
 
 ## TODO
 
-[ ] Snap this project [ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing [ ] Add unittests
-[ ] Add linting actions
+* [ ] Snap this project
+* [ ] Adjust log tar to not have /var/tmpXXXXXX in the pathing
+* [ ] Add unittests
+* [ ] Add linting actions
+* [ ] Use [COG](https://github.com/nedbat/cog) for readme formatting
