@@ -2,7 +2,7 @@
 name = "juju-k8s-crashdump"
 version = "1.0.0"
 description = "A simple tool for collecting kubernetes logs from a juju controller"
-authors = ["Alex Balderson <alexnader.balderson@canonical.com>"]
+authors = ["Solutions QA <solutions-qa@lists.canonical.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

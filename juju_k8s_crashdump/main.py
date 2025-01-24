@@ -1,12 +1,13 @@
 #!/bin/env/python3
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
 
 import argparse
 import os
 import tarfile
+
 from datetime import datetime
-
 from tempfile import TemporaryDirectory
-
 from .juju_cmd import JujuCmdClient
 from .k8s_cmd import KubectlCmdClient
 
@@ -37,8 +38,6 @@ def main():
             continue
         namespaces.append(model)
     with TemporaryDirectory() as tempdir:
-        #base_dir = f"{tempdir}/{uuid4()}"
-        #os.mkdir(base_dir)
         for namespace in namespaces:
             namespace_dir = f"{tempdir}/{namespace}"
             os.mkdir(namespace_dir)
