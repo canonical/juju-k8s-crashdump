@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "juju-k8s-crashdump"
+version = "1.0.0"
+description = "A simple tool for collecting kubernetes logs from a juju controller"
+authors = ["Solutions QA <solutions-qa@lists.canonical.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.10.5"
+pyyaml = "^6.0.2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.9.2"
+mdformat = "^0.7.21"
+bandit = "^1.8.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[project]
+name = "juju-k8s-crashdump"
+
+[project.scripts]
+juju-k8s-crashdump = "juju_k8s_crashdump.main:main"
