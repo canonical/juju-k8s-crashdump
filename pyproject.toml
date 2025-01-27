@@ -6,8 +6,8 @@ authors = ["Solutions QA <solutions-qa@lists.canonical.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-pydantic = "^2.10.5"
+python = "^3.10"
+pydantic = "^2.10.4"
 pyyaml = "^6.0.2"
 
 [tool.poetry.group.dev.dependencies]
