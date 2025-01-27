@@ -40,6 +40,7 @@ runs:
   - name: Install
     shell: bash
     run: |
+      sudo snap install kubectl --classic
       pipx install poetry==1.6
       pipx install .
   - name: Collect Logs
