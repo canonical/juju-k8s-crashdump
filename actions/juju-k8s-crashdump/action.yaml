@@ -23,6 +23,7 @@ runs:
     uses: actions/checkout@v4
     with:
       repository: canonical/juju-k8s-crashdump
+      ref: github-action
   - name: install pipx
     shell: bash
     run: |
