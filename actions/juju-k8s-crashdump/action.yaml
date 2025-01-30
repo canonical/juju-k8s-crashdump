@@ -47,6 +47,7 @@ runs:
       pipx install poetry==1.6
       pipx install .
   - name: Collect Logs
+    id: logs
     shell: bash
     working-directory: ./juju-k8s-crashdump
     run: |
