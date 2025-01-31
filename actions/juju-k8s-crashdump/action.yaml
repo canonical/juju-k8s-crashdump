@@ -15,7 +15,7 @@ inputs:
 outputs:
   crashdump_path:
     description: "Absolute path to the created crashdump"
-    value: ${{ steps.logs.outputs.path }}
+    value: ${{ steps.logs.outputs.crashdump_path }}
 runs:
   using: "composite"
   steps:
@@ -52,4 +52,4 @@ runs:
     working-directory: ./juju-k8s-crashdump
     run: |
       juju-k8s-crashdump ${{inputs.kubeconf}} ${{inputs.controller}}
-      echo "path=$(find \"$(pwd)\" -name \"*.tar.gz\")" >> $GITHUB_OUTPUT
+      echo "crashdump_path=$(find ~+ -name \"*.tar.gz\")" >> $GITHUB_OUTPUT
