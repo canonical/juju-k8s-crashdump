@@ -8,14 +8,13 @@ inputs:
   controller:
     description: "Name of a controller to collect logs for"
     required: true
+  output_path:
+    description: "Path to write the crashdump to, will write it as a .tar.gz file"
+    retquired: true
   proxy:
     description: "url for the a proxy to connect to pip with"
     required: false
     default: ""
-outputs:
-  crashdump_path:
-    description: "Absolute path to the created crashdump"
-    value: ${{ steps.logs.outputs.crashdump_path }}
 runs:
   using: "composite"
   steps:
@@ -23,6 +22,7 @@ runs:
     uses: actions/checkout@v4
     with:
       repository: canonical/juju-k8s-crashdump
+      revision: use-output-path
       path: ./juju-k8s-crashdump
   - name: install pipx
     shell: bash
@@ -47,9 +47,7 @@ runs:
       pipx install poetry==1.6
       pipx install .
   - name: Collect Logs
-    id: logs
     shell: bash
     working-directory: ./juju-k8s-crashdump
     run: |
-      juju-k8s-crashdump ${{inputs.kubeconf}} ${{inputs.controller}}
-      echo "crashdump_path=$(find ~+ -name \"*.tar.gz\")" >> $GITHUB_OUTPUT
+      juju-k8s-crashdump ${{ inputs.kubeconf }} ${{ inputs.controller }} --output ${{ inputs.output_path }}
