@@ -10,19 +10,21 @@ This package can be installed via pip and then called as a command line tool
 ```
 pipx install .
 
-juju-crashdump-k8s --help
+$ juju-k8s-crashdump --help
+usage: juju-k8s-crashdump [-h] [-o OUTPUT_PATH] kubeconf controller
 
-usage: juju-k8s-crashdump [-h] kubeconf controller
-
-Collect logs for standard resources juju creates in kubernetes
+Collect logs for standard resources juju creates in kubernetes.
 
 positional arguments:
-  kubeconf    Path to a kubeconf with permissions to reach the resources juju
-              creatres
-  controller  Name of the controller to get logs for
+  kubeconf              Path to a kubeconf with permissions to reach the
+                        resources juju creatres.
+  controller            Name of the controller to get logs for.
 
 options:
-  -h, --help  show this help message and exit
+  -h, --help            show this help message and exit
+  -o OUTPUT_PATH, --output_path OUTPUT_PATH
+                        full name and path for the output tar.gz, otherwise
+                        current directory and datetime will be used.
 ```
 
 ## Development

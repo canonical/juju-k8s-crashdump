@@ -13,9 +13,15 @@ from .k8s_cmd import KubectlCmdClient
 
 
 def create_parser():
-    parser = argparse.ArgumentParser(description="Collect logs for standard resources juju creates in kubernetes")
-    parser.add_argument("kubeconf", help="Path to a kubeconf with permissions to reach the resources juju creatres")
-    parser.add_argument("controller", help="Name of the controller to get logs for")
+    parser = argparse.ArgumentParser(description="Collect logs for standard resources juju creates in kubernetes.")
+    parser.add_argument("kubeconf", help="Path to a kubeconf with permissions to reach the resources juju creatres.")
+    parser.add_argument("controller", help="Name of the controller to get logs for.")
+    parser.add_argument(
+        "-o",
+        "--output_path",
+        help="full name and path for the output tar.gz, otherwise current directory and datetime will be used.",
+        default=f"{os.getcwd()}/{datetime.now().strftime('%Y-%m-%d-%H.%M.%S')}.tar.gz",
+    )
     return parser
 
 
@@ -50,8 +56,6 @@ def write_tar(tar_path: str, directory: str):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    output_tar = f"{os.getcwd()}/{datetime.now().strftime('%Y-%m-%d-%H.%M.%S')}.tar.gz"
-
     juju_client = JujuCmdClient()
     kubectl_client = KubectlCmdClient(args.kubeconf)
     with TemporaryDirectory() as tempdir:
@@ -60,8 +64,8 @@ def main():
             for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service"]:
                 resource_dir = os_mkdir(f"{namespace_dir}/{resource_type}")
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
-        write_tar(output_tar, tempdir)
-    print(f"Log tarfile written to {output_tar}")
+        write_tar(args.output_path, tempdir)
+    print(f"Log tarfile written to {args.output_path}")
 
 
 if __name__ == "__main__":
