@@ -22,7 +22,6 @@ runs:
     uses: actions/checkout@v4
     with:
       repository: canonical/juju-k8s-crashdump
-      ref: use-output-path
       path: ./juju-k8s-crashdump
   - name: install pipx
     shell: bash
