@@ -46,6 +46,7 @@ class KubectlCmdClient(KubectlClient):
             CmdArg(value=name),
             CmdArg(value=namespace, name="namespace"),
             CmdArg(name="all-containers"),
+            CmdArg(name="ignore-errors"),
         )
     
     def version_info_string(self, format: str | None = None) -> str:
