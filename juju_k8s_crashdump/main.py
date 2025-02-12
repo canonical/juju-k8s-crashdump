@@ -8,7 +8,9 @@ import tarfile
 from datetime import datetime
 from tempfile import TemporaryDirectory
 
+from .juju import JujuClient
 from .juju_cmd import JujuCmdClient
+from .k8s import KubectlClient
 from .k8s_cmd import KubectlCmdClient
 
 
@@ -25,7 +27,7 @@ def create_parser():
     return parser
 
 
-def get_namespaces(juju_client: JujuCmdClient, controller: str) -> list[str]:
+def get_namespaces(juju_client: JujuClient, controller: str) -> list[str]:
     namespaces = [f"controller-{controller}"]
     for model in juju_client.models(controller):
         if "controller" in model:
@@ -34,13 +36,19 @@ def get_namespaces(juju_client: JujuCmdClient, controller: str) -> list[str]:
     return namespaces
 
 
-def write_resource_info_to_file(kubectl_client: KubectlCmdClient, namespace: str, resource_type: str, path: str):
+def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, resource_type: str, path: str):
     for name in kubectl_client.get_resources(namespace, resource_type):
         with open(f"{path}/describe-{name}.txt", "w+") as f:
             f.write(kubectl_client.describe_resource(namespace, resource_type, name))
         if resource_type == "pod":
             with open(f"{path}/{name}.log", "w+") as f:
                 f.write(kubectl_client.pod_logs(namespace, name))
+
+def write_juju_status_to_file(juju_client: JujuClient, controller: str, model: str, path: str):
+    with open(f"{path}/juju-status.txt", "w+") as f:
+        f.write(juju_client.status_string(controller, model))
+    with open(f"{path}/juju-status.yaml", "w+") as f:
+        f.write(juju_client.status_string(controller, model, format="yaml"))
 
 
 def os_mkdir(path: str):
@@ -64,6 +72,8 @@ def main():
             for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service"]:
                 resource_dir = os_mkdir(f"{namespace_dir}/{resource_type}")
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
+            if not namespace.startswith("controller-"):
+                write_juju_status_to_file(juju_client, args.controller, namespace, namespace_dir)
         write_tar(args.output_path, tempdir)
     print(f"Log tarfile written to {args.output_path}")
 
