@@ -26,6 +26,7 @@ def create_parser():
     )
     return parser
 
+
 def write_kubernetes_version_to_file(kubectl_client: KubectlClient, path: str):
     with open(f"{path}/kubernetes-version.txt", "w+") as f:
         f.write(kubectl_client.version_info_string())
@@ -49,6 +50,7 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
         if resource_type == "pod":
             with open(f"{path}/{name}.log", "w+") as f:
                 f.write(kubectl_client.pod_logs(namespace, name))
+
 
 def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, model: str, path: str):
     with open(f"{path}/juju-status.txt", "w+") as f:
