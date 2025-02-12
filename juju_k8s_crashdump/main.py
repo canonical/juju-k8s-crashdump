@@ -50,7 +50,7 @@ def os_mkdir(path: str):
 
 def write_tar(tar_path: str, directory: str):
     with tarfile.open(tar_path, "w:gz") as tar:
-        tar.add(directory)
+        tar.add(directory, arcname="")
 
 
 def main():
