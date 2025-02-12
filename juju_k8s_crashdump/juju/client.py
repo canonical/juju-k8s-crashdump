@@ -12,3 +12,7 @@ class JujuClient(ABC):
     @abstractmethod
     def status_string(self, controller: str, model: str, format: str = "tabular") -> str:
         raise NotImplementedError
+    
+    @abstractmethod
+    def debug_log(self, controller: str, model: str) -> str:
+        raise NotImplementedError

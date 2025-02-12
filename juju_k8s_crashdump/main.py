@@ -50,11 +50,13 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
             with open(f"{path}/{name}.log", "w+") as f:
                 f.write(kubectl_client.pod_logs(namespace, name))
 
-def write_juju_status_to_file(juju_client: JujuClient, controller: str, model: str, path: str):
+def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, model: str, path: str):
     with open(f"{path}/juju-status.txt", "w+") as f:
         f.write(juju_client.status_string(controller, model))
     with open(f"{path}/juju-status.yaml", "w+") as f:
         f.write(juju_client.status_string(controller, model, format="yaml"))
+    with open(f"{path}/debug-log.txt", "w+") as f:
+        f.write(juju_client.debug_log(controller, model))
 
 
 def os_mkdir(path: str):
@@ -80,7 +82,7 @@ def main():
                 resource_dir = os_mkdir(f"{namespace_dir}/{resource_type}")
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
             if not namespace.startswith("controller-"):
-                write_juju_status_to_file(juju_client, args.controller, namespace, namespace_dir)
+                write_juju_model_info_to_file(juju_client, args.controller, namespace, namespace_dir)
         write_tar(args.output_path, tempdir)
     print(f"Log tarfile written to {args.output_path}")
 

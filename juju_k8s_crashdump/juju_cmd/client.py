@@ -36,3 +36,12 @@ class JujuCmdClient(JujuClient):
             CmdArg(name="format", value=format),
             CmdArg(name="integrations") if format == "tabular" else CmdArg(),
         )
+    
+    def debug_log(self, controller: str, model: str) -> str:
+        return self._call_juju(
+            CmdArg(value="debug-log"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+            CmdArg(name="replay"),
+            CmdArg(name="date"),
+            CmdArg(name="no-tail"),
+        )
