@@ -26,6 +26,12 @@ def create_parser():
     )
     return parser
 
+def write_kubernetes_version_to_file(kubectl_client: KubectlClient, path: str):
+    with open(f"{path}/kubernetes-version.txt", "w+") as f:
+        f.write(kubectl_client.version_info_string())
+    with open(f"{path}/kubernetes-version.yaml", "w+") as f:
+        f.write(kubectl_client.version_info_string(format="yaml"))
+
 
 def get_namespaces(juju_client: JujuClient, controller: str) -> list[str]:
     namespaces = [f"controller-{controller}"]
@@ -67,6 +73,7 @@ def main():
     juju_client = JujuCmdClient()
     kubectl_client = KubectlCmdClient(args.kubeconf)
     with TemporaryDirectory() as tempdir:
+        write_kubernetes_version_to_file(kubectl_client, tempdir)
         for namespace in get_namespaces(juju_client, args.controller):
             namespace_dir = os_mkdir(f"{tempdir}/{namespace}")
             for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service"]:

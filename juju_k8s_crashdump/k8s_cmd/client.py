@@ -47,3 +47,9 @@ class KubectlCmdClient(KubectlClient):
             CmdArg(value=namespace, name="namespace"),
             CmdArg(name="all-containers"),
         )
+    
+    def version_info_string(self, format: str | None = None) -> str:
+        return self._call_kubectl(
+            CmdArg(value="version"),
+            CmdArg(name="output", value=format) if format else CmdArg(),
+        )
