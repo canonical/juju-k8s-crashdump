@@ -28,3 +28,26 @@ class JujuCmdClient(JujuClient):
                 )
             )["models"]
         ]
+
+    def status_string(self, controller: str, model: str, format: str = "tabular") -> str:
+        return self._call_juju(
+            CmdArg(value="status"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+            CmdArg(name="format", value=format),
+            CmdArg(name="integrations") if format == "tabular" else CmdArg(),
+        )
+
+    def debug_log(self, controller: str, model: str) -> str:
+        return self._call_juju(
+            CmdArg(value="debug-log"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+            CmdArg(name="replay"),
+            CmdArg(name="date"),
+            CmdArg(name="no-tail"),
+        )
+
+    def bundle_string(self, controller: str, model: str) -> str:
+        return self._call_juju(
+            CmdArg(value="export-bundle"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+        )

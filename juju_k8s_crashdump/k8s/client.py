@@ -16,3 +16,7 @@ class KubectlClient(ABC):
     @abstractmethod
     def pod_logs(self, namespace: str, name: str) -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def version_info_string(self, format: str | None = None) -> str:
+        raise NotImplementedError
