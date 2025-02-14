@@ -45,3 +45,9 @@ class JujuCmdClient(JujuClient):
             CmdArg(name="date"),
             CmdArg(name="no-tail"),
         )
+
+    def bundle_string(self, controller: str, model: str) -> str:
+        return self._call_juju(
+            CmdArg(value="export-bundle"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+        )

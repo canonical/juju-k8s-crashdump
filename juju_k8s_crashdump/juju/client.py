@@ -16,3 +16,7 @@ class JujuClient(ABC):
     @abstractmethod
     def debug_log(self, controller: str, model: str) -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def bundle_string(self, controller: str, model: str) -> str:
+        raise NotImplementedError

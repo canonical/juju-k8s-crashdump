@@ -59,6 +59,8 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         f.write(juju_client.status_string(controller, model, format="yaml"))
     with open(f"{path}/debug-log.txt", "w+") as f:
         f.write(juju_client.debug_log(controller, model))
+    with open(f"{path}/bundle.yaml", "w+") as f:
+        f.write(juju_client.bundle_string(controller, model))
 
 
 def os_mkdir(path: str):
