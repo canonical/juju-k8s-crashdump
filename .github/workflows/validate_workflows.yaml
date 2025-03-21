@@ -5,18 +5,19 @@ on:
   push:
     paths:
       - '.github/workflows/*'
+      - 'actions/**'
 
 jobs:
   workflow_validation:
     name: Workflow validation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Checkbox monorepo
+      - name: Checkout repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
       - name: Install action-validator with asdf
-        uses: asdf-vm/actions/install@05e0d2ed97b598bfce82fd30daf324ae0c4570e6
+        uses: asdf-vm/actions/install@9cd779f40fe38688dd19505ccbc4eaaf018b44e7
         with:
           tool_versions: |
             action-validator 0.6.0
@@ -24,11 +25,14 @@ jobs:
         run: |
           find .github/workflows -type f \( -iname \*.yaml -o -iname \*.yml \) \
             | xargs -I {} action-validator --verbose {}
+          
+          find actions -type f \( -iname \*.yaml -o -iname \*.yml \) \
+            | xargs -I {} action-validator --verbose {}
   workflow_vulnerability_scan:
     name: Workflow vulnerability scanning
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Checkbox monorepo
+      - name: Checkout repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
@@ -41,4 +45,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          zizmor --pedantic $(ls .github/workflows/*.{yaml,yml})
+          zizmor --pedantic $(ls .github/workflows/*.{yaml,yml}) $(ls actions/*/action.{yaml,yml})
