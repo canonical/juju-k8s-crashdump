@@ -10,7 +10,7 @@ inputs:
     required: true
   output_path:
     description: "Path to write the crashdump to, will write it as a .tar.gz file"
-    retquired: true
+    required: true
   proxy:
     description: "url for the a proxy to connect to pip with"
     required: false
@@ -19,7 +19,7 @@ runs:
   using: "composite"
   steps:
   - name: Clone repo
-    uses: actions/checkout@v4
+    uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
     with:
       repository: canonical/juju-k8s-crashdump
       path: ./juju-k8s-crashdump
@@ -33,10 +33,12 @@ runs:
     if: ${{inputs.proxy}} != ""
     shell: bash
     working-directory: ./juju-k8s-crashdump
+    env:
+      proxy: ${{inputs.proxy}}
     run: |
       sudo tee /etc/pip.conf <<EOF
       [global]
-      proxy=${{inputs.proxy}}
+      proxy=${proxy}
       EOF
   - name: Install
     shell: bash
@@ -48,5 +50,9 @@ runs:
   - name: Collect Logs
     shell: bash
     working-directory: ./juju-k8s-crashdump
+    env:
+      kubeconf: ${{ inputs.kubeconf }}
+      controller: ${{ inputs.controller }}
+      output_path: ${{ inputs.output_path }}
     run: |
-      juju-k8s-crashdump ${{ inputs.kubeconf }} ${{ inputs.controller }} --output ${{ inputs.output_path }}
+      juju-k8s-crashdump ${kubeconf} ${controller} --output ${output_path}
