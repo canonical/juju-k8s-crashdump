@@ -20,3 +20,7 @@ class JujuClient(ABC):
     @abstractmethod
     def bundle_string(self, controller: str, model: str) -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def dump_db(self, controller: str, model: str, format: str = "yaml") -> str:
+        raise NotImplementedError

@@ -14,8 +14,8 @@ class JujuCmdClient(JujuClient):
     def __init__(self, cmd_client: CmdClient = None):
         self.cmd_client = cmd_client if cmd_client is not None else CmdClient()
 
-    def _call_juju(self, *args: list[CmdArg]) -> str:
-        return self.cmd_client.call(CmdArg(value="juju"), *args)
+    def _call_juju(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
+        return self.cmd_client.call(CmdArg(value="juju"), *args, environment=environment)
 
     def models(self, controller: str) -> list[str]:
         return [
@@ -50,4 +50,12 @@ class JujuCmdClient(JujuClient):
         return self._call_juju(
             CmdArg(value="export-bundle"),
             CmdArg(name="model", value=f"{controller}:{model}"),
+        )
+
+    def dump_db(self, controller: str, model: str, format: str = "yaml") -> str:
+        return self._call_juju(
+            CmdArg(value="dump-db"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+            CmdArg(name="format", value=format),
+            environment={"JUJU_DEV_FEATURE_FLAGS": "developer-mode"},
         )

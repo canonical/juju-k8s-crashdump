@@ -31,10 +31,10 @@ class CmdError(RuntimeError):
 
 
 class CmdClient:
-    def call(self, *args: list[CmdArg]) -> str:
+    def call(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
         # Run the command
         parsed_args = self.parse_args(*args)
-        result = subprocess.run(self.parse_args(*args), capture_output=True, text=True)
+        result = subprocess.run(self.parse_args(*args), capture_output=True, text=True, env=environment)
 
         # Print the results
         # print(result.stdout, end="")

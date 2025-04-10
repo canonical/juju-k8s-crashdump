@@ -65,6 +65,8 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         except Exception as e:
             bundle_string = str(e)
         f.write(bundle_string)
+    with open(f"{path}/db-dump.yaml", "w+") as f:
+        f.write(juju_client.dump_db(controller, model, format="yaml"))
 
 
 def os_mkdir(path: str):
