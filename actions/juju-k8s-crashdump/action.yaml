@@ -10,11 +10,18 @@ inputs:
     required: true
   output_path:
     description: "Path to write the crashdump to, will write it as a .tar.gz file"
-    required: true
+    required: false
+    default: "juju-logs.tar.gz"
   proxy:
     description: "url for the a proxy to connect to pip with"
     required: false
     default: ""
+
+outputs:
+  crashdump_path:
+    description: "Path to the output crashdump"
+    value: ${{ steps.collect_logs.outputs.crashdump_path }}
+
 runs:
   using: "composite"
   steps:
@@ -23,12 +30,14 @@ runs:
     with:
       repository: canonical/juju-k8s-crashdump
       path: ./juju-k8s-crashdump
-  - name: install pipx
+
+  - name: Install pipx
     shell: bash
     working-directory: ./juju-k8s-crashdump
     run: |
       sudo apt-get update --quiet
       sudo apt-get install pipx --quiet --assume-yes
+
   - name: Setup pip proxy
     if: ${{inputs.proxy}} != ""
     shell: bash
@@ -40,6 +49,7 @@ runs:
       [global]
       proxy=${proxy}
       EOF
+
   - name: Install
     shell: bash
     working-directory: ./juju-k8s-crashdump
@@ -47,7 +57,9 @@ runs:
       sudo snap install kubectl --classic
       pipx install poetry==1.6
       pipx install .
+
   - name: Collect Logs
+    id: collect_logs
     shell: bash
     working-directory: ./juju-k8s-crashdump
     env:
@@ -55,4 +67,6 @@ runs:
       controller: ${{ inputs.controller }}
       output_path: ${{ inputs.output_path }}
     run: |
-      juju-k8s-crashdump ${kubeconf} ${controller} --output ${output_path}
+      juju-k8s-crashdump "${kubeconf}" "${controller}" --output "${output_path}"
+      echo "crashdump_path=$(realpath ${output_path})" >> $GITHUB_OUTPUT
+
