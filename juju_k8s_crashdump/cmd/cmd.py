@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+import os
 import subprocess
 import sys
 from typing import Optional
@@ -32,6 +33,10 @@ class CmdError(RuntimeError):
 
 class CmdClient:
     def call(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
+        # Copy existing environment if environment is passed
+        if environment is not None:
+            environment = {**os.environ.copy(), **environment}
+
         # Run the command
         parsed_args = self.parse_args(*args)
         result = subprocess.run(self.parse_args(*args), capture_output=True, text=True, env=environment)
