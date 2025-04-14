@@ -30,6 +30,9 @@ runs:
     with:
       repository: canonical/juju-k8s-crashdump
       path: ./juju-k8s-crashdump
+      ref: ${{ env.ACTION_REF }}
+    env:
+      ACTION_REF: ${{ github.action_ref }}
 
   - name: Install pipx
     shell: bash
