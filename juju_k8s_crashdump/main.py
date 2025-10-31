@@ -5,9 +5,10 @@
 import argparse
 import os
 import tarfile
-from datetime import datetime
+from datetime import datetime, timedelta
 from tempfile import TemporaryDirectory
 
+from .cmd import CmdClient
 from .juju import JujuClient
 from .juju_cmd import JujuCmdClient
 from .k8s import KubectlClient
@@ -82,8 +83,9 @@ def write_tar(tar_path: str, directory: str):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    juju_client = JujuCmdClient()
-    kubectl_client = KubectlCmdClient(args.kubeconf)
+    cmd_client = CmdClient(retry_count=5, retry_delay=timedelta(seconds=5))
+    juju_client = JujuCmdClient(cmd_client=cmd_client)
+    kubectl_client = KubectlCmdClient(args.kubeconf, cmd_client=cmd_client)
     with TemporaryDirectory() as tempdir:
         write_kubernetes_version_to_file(kubectl_client, tempdir)
         for namespace in get_namespaces(juju_client, args.controller):

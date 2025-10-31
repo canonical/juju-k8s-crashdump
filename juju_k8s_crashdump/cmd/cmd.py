@@ -3,7 +3,8 @@
 
 import os
 import subprocess
-import sys
+import time
+from datetime import timedelta
 from typing import Optional
 
 from pydantic import field_validator
@@ -32,22 +33,32 @@ class CmdError(RuntimeError):
 
 
 class CmdClient:
+    retry_count: int
+    retry_delay: timedelta
+
+    def __init__(self, retry_count: int = 0, retry_delay: timedelta = timedelta(seconds=1)):
+        self.retry_count = retry_count
+        self.retry_delay = retry_delay
+
     def call(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
         # Copy existing environment if environment is passed
         if environment is not None:
             environment = {**os.environ.copy(), **environment}
 
-        # Run the command
+        # Parse the arguments
         parsed_args = self.parse_args(*args)
-        result = subprocess.run(self.parse_args(*args), capture_output=True, text=True, env=environment)
 
-        # Print the results
-        # print(result.stdout, end="")
-        print(result.stderr, file=sys.stderr, end="")
+        # Run the command with retries
+        for attempt in range(self.retry_count + 1):
+            result = subprocess.run(parsed_args, capture_output=True, text=True, env=environment)
 
-        # Check for error
-        if result.returncode != 0:
-            raise CmdError(" ".join(parsed_args), result.returncode, stdout=result.stdout, stderr=result.stderr)
+            if result.returncode == 0:
+                break
+
+            if attempt < self.retry_count:
+                time.sleep(self.retry_delay.total_seconds())
+            else:
+                raise CmdError(" ".join(parsed_args), result.returncode, stdout=result.stdout, stderr=result.stderr)
 
         return result.stdout
 
