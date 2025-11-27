@@ -68,6 +68,22 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         f.write(bundle_string)
     with open(f"{path}/db-dump.yaml", "w+") as f:
         f.write(juju_client.dump_db(controller, model, format="yaml"))
+    
+    status_logs = juju_client.status_log(controller, model)
+    for application in status_logs["applications"]:
+        with open(f"{path}/status-log/applications/{application}.txt", "w+") as f:
+            f.write(status_logs["applications"][application])
+    for unit in status_logs["units"]:
+        with open(f"{path}/status-log/units/{unit}.txt", "w+") as f:
+            f.write(status_logs["units"][unit])
+    
+    yaml_status_logs = juju_client.status_log(controller, model, format="yaml")
+    for application in yaml_status_logs["applications"]:
+        with open(f"{path}/status-log/applications/{application}.yaml", "w+") as f:
+            f.write(yaml_status_logs["applications"][application])
+    for unit in yaml_status_logs["units"]:
+        with open(f"{path}/status-log/units/{unit}.yaml", "w+") as f:
+            f.write(yaml_status_logs["units"][unit])
 
 
 def os_mkdir(path: str):
@@ -94,6 +110,9 @@ def main():
                 resource_dir = os_mkdir(f"{namespace_dir}/{resource_type}")
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
             if not namespace.startswith("controller-"):
+                status_log_dir = os_mkdir(f"{namespace_dir}/status-log")
+                os_mkdir(f"{status_log_dir}/applications")
+                os_mkdir(f"{status_log_dir}/units")
                 write_juju_model_info_to_file(juju_client, args.controller, namespace, namespace_dir)
         write_tar(args.output_path, tempdir)
     print(f"Log tarfile written to {args.output_path}")
