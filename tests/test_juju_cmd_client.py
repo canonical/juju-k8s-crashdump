@@ -156,3 +156,81 @@ def test_status_log_with_no_units(juju_client, mock_cmd_client, status_with_only
     assert len(result["units"]) == 0
     assert result["applications"]["nginx"] == app_log
     assert mock_cmd_client.call.call_count == 2
+
+
+def _check_call_args(call_args, expected_args):
+    for name, value in expected_args:
+        assert len(call_args) == len(expected_args)
+        assert any(arg.name == name and arg.value == value for arg in call_args)
+
+
+def test_status_log_calls_with_correct_parameters(
+    juju_client, mock_cmd_client, status_with_apps_and_units, app_log, unit_log
+):
+    """Test that show-status-log is called with correct parameters."""
+    mock_cmd_client.call.side_effect = [
+        status_with_apps_and_units,
+        app_log,
+        app_log,
+        unit_log,
+        unit_log,
+        unit_log,
+    ]
+
+    juju_client.status_log("prod-controller", "my-model", "yaml")
+
+    # Get all the calls made to mock_cmd_client.call
+    calls = mock_cmd_client.call.call_args_list
+    
+    expected_call_args = [
+        [
+            (None, "juju"),
+            (None, "status"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            (None, None),  # status call has an empty argument because format is not tabular
+        ],
+        [
+            (None, "juju"),
+            (None, "show-status-log"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            ("type", "application"),
+            (None, "mysql"),
+        ],
+        [
+            (None, "juju"),
+            (None, "show-status-log"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            ("type", "application"),
+            (None, "prometheus"),
+        ],
+        [
+            (None, "juju"),
+            (None, "show-status-log"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            ("type", "unit"),
+            (None, "mysql/0"),
+        ],
+        [
+            (None, "juju"),
+            (None, "show-status-log"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            ("type", "unit"),
+            (None, "prometheus/0"),
+        ],
+        [
+            (None, "juju"),
+            (None, "show-status-log"),
+            ("model", "prod-controller:my-model"),
+            ("format", "yaml"),
+            ("type", "unit"),
+            (None, "prometheus/1"),
+        ],
+    ]
+    
+    for i in range(6):
+        _check_call_args(calls[i][0], expected_call_args[i])
