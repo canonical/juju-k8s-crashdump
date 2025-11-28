@@ -99,7 +99,7 @@ def test_status_log_with_no_units(juju_client, mock_cmd_client, app_log):
     assert mock_cmd_client.call.call_count == 1
 
 
-def _check_call_args(call_args, expected_args):
+def _assert_cmd_args_match(call_args, expected_args):
     assert len(call_args) == len(expected_args)
     for name, value in expected_args:
         assert any(arg.name == name and arg.value == value for arg in call_args)
@@ -167,4 +167,4 @@ def test_status_log_calls_with_correct_parameters(juju_client, mock_cmd_client, 
     ]
 
     for i in range(5):
-        _check_call_args(calls[i][0], expected_call_args[i])
+        _assert_cmd_args_match(calls[i][0], expected_call_args[i])
