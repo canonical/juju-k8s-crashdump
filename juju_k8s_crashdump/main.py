@@ -88,7 +88,8 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         with open(f"{path}/status-log/applications/{application}.yaml", "w+") as f:
             f.write(yaml_status_logs["applications"][application])
     for unit in yaml_status_logs["units"]:
-        with open(f"{path}/status-log/units/{unit}.yaml", "w+") as f:
+        unit_name_without_slash = unit.replace("/", "-")
+        with open(f"{path}/status-log/units/{unit_name_without_slash}.yaml", "w+") as f:
             f.write(yaml_status_logs["units"][unit])
 
 
