@@ -70,7 +70,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     unit_names = []
     for application in application_names:
         unit_names.extend(applications_dict[application].get("units", {}).keys())
-    
+
     with open(path / "debug-log.txt", "w+") as f:
         f.write(juju_client.debug_log(controller, model))
 
