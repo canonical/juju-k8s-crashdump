@@ -181,7 +181,7 @@ def test_status_log_calls_with_correct_parameters(
 
     # Get all the calls made to mock_cmd_client.call
     calls = mock_cmd_client.call.call_args_list
-    
+
     expected_call_args = [
         [
             (None, "juju"),
@@ -231,6 +231,6 @@ def test_status_log_calls_with_correct_parameters(
             (None, "prometheus/1"),
         ],
     ]
-    
+
     for i in range(6):
         _check_call_args(calls[i][0], expected_call_args[i])

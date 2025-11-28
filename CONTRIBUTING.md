@@ -35,7 +35,6 @@ To run the test suite, use:
 poetry run pytest
 ```
 
-
 ## Pull requests
 
 ### Code review criteria & workflow

@@ -68,7 +68,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         f.write(bundle_string)
     with open(f"{path}/db-dump.yaml", "w+") as f:
         f.write(juju_client.dump_db(controller, model, format="yaml"))
-    
+
     status_logs = juju_client.status_log(controller, model)
     for application in status_logs["applications"]:
         with open(f"{path}/status-log/applications/{application}.txt", "w+") as f:
@@ -76,7 +76,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     for unit in status_logs["units"]:
         with open(f"{path}/status-log/units/{unit}.txt", "w+") as f:
             f.write(status_logs["units"][unit])
-    
+
     yaml_status_logs = juju_client.status_log(controller, model, format="yaml")
     for application in yaml_status_logs["applications"]:
         with open(f"{path}/status-log/applications/{application}.yaml", "w+") as f:
