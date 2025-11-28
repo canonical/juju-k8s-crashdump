@@ -60,7 +60,7 @@ class JujuCmdClient(JujuClient):
             environment={"JUJU_DEV_FEATURE_FLAGS": "developer-mode"},
         )
 
-    def status_log(self, controller: str, model: str, format: str = "tabular") -> str:
+    def status_log(self, controller: str, model: str, format: str = "tabular") -> dict[str, dict[str, str]]:
         status = yaml.safe_load(self.status_string(controller, model, "yaml"))
         application_names = status.get("applications", {}).keys()
         unit_names = status.get("units", {}).keys()
