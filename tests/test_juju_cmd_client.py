@@ -159,8 +159,8 @@ def test_status_log_with_no_units(juju_client, mock_cmd_client, status_with_only
 
 
 def _check_call_args(call_args, expected_args):
+    assert len(call_args) == len(expected_args)
     for name, value in expected_args:
-        assert len(call_args) == len(expected_args)
         assert any(arg.name == name and arg.value == value for arg in call_args)
 
 
