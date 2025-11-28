@@ -57,6 +57,11 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
                 f.write(kubectl_client.pod_logs(namespace, name))
 
 
+def _sanitize_unit_name(name: str) -> str:
+    """Remove forward slash from unit name"""
+    return name.replace("/", "-")
+
+
 def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, model: str, path: Path):
     with open(path / "juju-status.txt", "w+") as f:
         f.write(juju_client.status_string(controller, model))
@@ -95,8 +100,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         with open(path / f"status-log/application-{application}.txt", "w+") as f:
             f.write(status_logs["applications"][application])
     for unit in status_logs["units"]:
-        unit_name_without_slash = unit.replace("/", "-")
-        with open(path / f"status-log/unit-{unit_name_without_slash}.txt", "w+") as f:
+        with open(path / f"status-log/unit-{_sanitize_unit_name(unit)}.txt", "w+") as f:
             f.write(status_logs["units"][unit])
 
     yaml_status_logs = juju_client.status_log(controller, model, application_names, unit_names, format="yaml")
@@ -104,8 +108,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         with open(path / f"status-log/application-{application}.yaml", "w+") as f:
             f.write(yaml_status_logs["applications"][application])
     for unit in yaml_status_logs["units"]:
-        unit_name_without_slash = unit.replace("/", "-")
-        with open(path / f"status-log/unit-{unit_name_without_slash}.yaml", "w+") as f:
+        with open(path / f"status-log/unit-{_sanitize_unit_name(unit)}.yaml", "w+") as f:
             f.write(yaml_status_logs["units"][unit])
 
 
