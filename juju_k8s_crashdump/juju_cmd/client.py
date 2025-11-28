@@ -72,6 +72,8 @@ class JujuCmdClient(JujuClient):
                 CmdArg(value="show-status-log"),
                 CmdArg(name="format", value=format),
                 CmdArg(name="type", value="application"),
+                CmdArg(name="model", value=f"{controller}:{model}"),
+                CmdArg(value=application),
                 )
         
         for unit in unit_names:
@@ -79,6 +81,8 @@ class JujuCmdClient(JujuClient):
                 CmdArg(value="show-status-log"),
                 CmdArg(name="format", value=format),
                 CmdArg(name="type", value="unit"),
+                CmdArg(name="model", value=f"{controller}:{model}"),
+                CmdArg(value=unit),
                 )
 
         return result
