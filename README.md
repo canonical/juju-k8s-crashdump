@@ -38,4 +38,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more information about development be
 - [ ] Add unittests
 - [ ] Add linting actions
 - [ ] Use [COG](https://github.com/nedbat/cog) for readme formatting
-- [ ] Use pathlib instead of f-strings for paths
