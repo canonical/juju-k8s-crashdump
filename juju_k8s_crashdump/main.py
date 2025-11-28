@@ -8,6 +8,8 @@ import tarfile
 from datetime import datetime, timedelta
 from tempfile import TemporaryDirectory
 
+import yaml
+
 from .cmd import CmdClient
 from .juju import JujuClient
 from .juju_cmd import JujuCmdClient
@@ -57,7 +59,11 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     with open(f"{path}/juju-status.txt", "w+") as f:
         f.write(juju_client.status_string(controller, model))
     with open(f"{path}/juju-status.yaml", "w+") as f:
-        f.write(juju_client.status_string(controller, model, format="yaml"))
+        yaml_status = juju_client.status_string(controller, model, format="yaml")
+        f.write(yaml_status)
+        status_dict = yaml.safe_load(yaml_status)
+        application_names = list(status_dict.get("applications", {}).keys())
+        unit_names = list(status_dict.get("units", {}).keys())
     with open(f"{path}/debug-log.txt", "w+") as f:
         f.write(juju_client.debug_log(controller, model))
     with open(f"{path}/bundle.yaml", "w+") as f:
@@ -69,7 +75,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     with open(f"{path}/db-dump.yaml", "w+") as f:
         f.write(juju_client.dump_db(controller, model, format="yaml"))
 
-    status_logs = juju_client.status_log(controller, model)
+    status_logs = juju_client.status_log(controller, model, application_names, unit_names, format="tabular")
     for application in status_logs["applications"]:
         with open(f"{path}/status-log/applications/{application}.txt", "w+") as f:
             f.write(status_logs["applications"][application])
@@ -77,7 +83,7 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         with open(f"{path}/status-log/units/{unit}.txt", "w+") as f:
             f.write(status_logs["units"][unit])
 
-    yaml_status_logs = juju_client.status_log(controller, model, format="yaml")
+    yaml_status_logs = juju_client.status_log(controller, model, application_names, unit_names, format="yaml")
     for application in yaml_status_logs["applications"]:
         with open(f"{path}/status-log/applications/{application}.yaml", "w+") as f:
             f.write(yaml_status_logs["applications"][application])
