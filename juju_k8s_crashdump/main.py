@@ -58,7 +58,7 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
 
 
 def _sanitize_unit_name(name: str) -> str:
-    """Remove forward slash from unit name"""
+    """Remove forward slash from unit name."""
     return name.replace("/", "-")
 
 
