@@ -29,7 +29,11 @@ Requests to this repository. To format, run:
 
 ## Testing
 
-...
+To run the test suite, use:
+
+```bash
+poetry run pytest
+```
 
 ## Pull requests
 

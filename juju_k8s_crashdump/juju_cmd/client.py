@@ -59,3 +59,28 @@ class JujuCmdClient(JujuClient):
             CmdArg(name="format", value=format),
             environment={"JUJU_DEV_FEATURE_FLAGS": "developer-mode"},
         )
+
+    def status_log(
+        self, controller: str, model: str, application_names: list[str], unit_names: list[str], format: str = "tabular"
+    ) -> dict[str, dict[str, str]]:
+        result = {"applications": {}, "units": {}}
+
+        for application in application_names:
+            result["applications"][application] = self._call_juju(
+                CmdArg(value="show-status-log"),
+                CmdArg(name="format", value=format),
+                CmdArg(name="type", value="application"),
+                CmdArg(name="model", value=f"{controller}:{model}"),
+                CmdArg(value=application),
+            )
+
+        for unit in unit_names:
+            result["units"][unit] = self._call_juju(
+                CmdArg(value="show-status-log"),
+                CmdArg(name="format", value=format),
+                CmdArg(name="type", value="unit"),
+                CmdArg(name="model", value=f"{controller}:{model}"),
+                CmdArg(value=unit),
+            )
+
+        return result
