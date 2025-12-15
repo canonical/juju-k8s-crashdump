@@ -24,3 +24,9 @@ class JujuClient(ABC):
     @abstractmethod
     def dump_db(self, controller: str, model: str, format: str = "yaml") -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def status_log(
+        self, controller: str, model: str, entity_type: str, entity_name: str, format: str = "tabular"
+    ) -> str:
+        raise NotImplementedError
