@@ -57,11 +57,6 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
                 f.write(kubectl_client.pod_logs(namespace, name))
 
 
-def _sanitize_unit_name(name: str) -> str:
-    """Remove forward slash from unit name."""
-    return name.replace("/", "-")
-
-
 def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, model: str, path: Path):
     with open(path / "juju-status.txt", "w+") as f:
         f.write(juju_client.status_string(controller, model))
@@ -95,21 +90,17 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     #   ├── application-<app-name>.yaml
     #   ├── unit-<unit-name>-<unit-number>.txt
     #   └── unit-<unit-name>-<unit-number>.yaml
-    status_logs = juju_client.status_log(controller, model, application_names, unit_names, format="tabular")
-    for application in status_logs["applications"]:
-        with open(path / f"status-log/application-{application}.txt", "w+") as f:
-            f.write(status_logs["applications"][application])
-    for unit in status_logs["units"]:
-        with open(path / f"status-log/unit-{_sanitize_unit_name(unit)}.txt", "w+") as f:
-            f.write(status_logs["units"][unit])
+    for entity_type, names in [("application", application_names), ("unit", unit_names)]:
+        for name in names:
+            for format_type, extension in [("tabular", "txt"), ("yaml", "yaml")]:
+                try:
+                    status_log = juju_client.status_log(controller, model, entity_type, name, format=format_type)
+                except Exception as e:
+                    status_log = str(e)
 
-    yaml_status_logs = juju_client.status_log(controller, model, application_names, unit_names, format="yaml")
-    for application in yaml_status_logs["applications"]:
-        with open(path / f"status-log/application-{application}.yaml", "w+") as f:
-            f.write(yaml_status_logs["applications"][application])
-    for unit in yaml_status_logs["units"]:
-        with open(path / f"status-log/unit-{_sanitize_unit_name(unit)}.yaml", "w+") as f:
-            f.write(yaml_status_logs["units"][unit])
+                filename = f"{entity_type}-{name.replace('/', '-')}.{extension}"
+                with open(path / f"status-log/{filename}", "w+") as f:
+                    f.write(status_log)
 
 
 def write_tar(tar_path: Path, directory: Path):
