@@ -1,0 +1,24 @@
+name: Unit Tests
+permissions:
+  contents: read # required for private repos
+
+on:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install poetry
+        run: pipx install poetry==1.6
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run unit tests
+        run: ./scripts/unit-tests.sh
