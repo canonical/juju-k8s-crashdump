@@ -3,4 +3,4 @@
 
 from .client import KubectlClient
 
-__all__ = [KubectlClient]
+__all__ = ["KubectlClient"]

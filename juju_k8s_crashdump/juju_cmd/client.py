@@ -11,10 +11,10 @@ from juju_k8s_crashdump.juju import JujuClient
 class JujuCmdClient(JujuClient):
     cmd_client: CmdClient
 
-    def __init__(self, cmd_client: CmdClient = None):
+    def __init__(self, cmd_client: CmdClient | None = None):
         self.cmd_client = cmd_client if cmd_client is not None else CmdClient()
 
-    def _call_juju(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
+    def _call_juju(self, *args: CmdArg, environment: dict[str, str] | None = None) -> str:
         return self.cmd_client.call(CmdArg(value="juju"), *args, environment=environment)
 
     def models(self, controller: str) -> list[str]:

@@ -40,7 +40,7 @@ class CmdClient:
         self.retry_count = retry_count
         self.retry_delay = retry_delay
 
-    def call(self, *args: list[CmdArg], environment: dict[str, str] | None = None) -> str:
+    def call(self, *args: CmdArg, environment: dict[str, str] | None = None) -> str:
         # Copy existing environment if environment is passed
         if environment is not None:
             environment = {**os.environ.copy(), **environment}
@@ -62,7 +62,7 @@ class CmdClient:
 
         return result.stdout
 
-    def parse_args(self, *args: list[CmdArg]) -> list[str]:
+    def parse_args(self, *args: CmdArg) -> list[str]:
         results = []
         for arg in args:
             if arg.name is not None:

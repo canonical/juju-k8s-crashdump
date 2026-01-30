@@ -3,4 +3,4 @@
 
 from .client import JujuCmdClient
 
-__all__ = [JujuCmdClient]
+__all__ = ["JujuCmdClient"]

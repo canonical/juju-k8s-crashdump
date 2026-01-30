@@ -3,4 +3,4 @@
 
 from .client import JujuClient
 
-__all__ = [JujuClient]
+__all__ = ["JujuClient"]

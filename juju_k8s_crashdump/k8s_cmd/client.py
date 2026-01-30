@@ -12,11 +12,11 @@ class KubectlCmdClient(KubectlClient):
     cmd_client: CmdClient
     kubeconf: str
 
-    def __init__(self, kubeconf, cmd_client: CmdClient = None):
+    def __init__(self, kubeconf, cmd_client: CmdClient | None = None):
         self.kubeconf = kubeconf
         self.cmd_client = cmd_client if cmd_client is not None else CmdClient()
 
-    def _call_kubectl(self, *args: list[CmdArg]) -> str:
+    def _call_kubectl(self, *args: CmdArg) -> str:
         return self.cmd_client.call(CmdArg(value="kubectl"), CmdArg(value=self.kubeconf, name="kubeconfig"), *args)
 
     def get_resources(self, namespace: str, resource: str) -> list[str]:
