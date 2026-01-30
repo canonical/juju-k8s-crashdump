@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+from pathlib import Path
 
 import yaml
 
@@ -47,6 +48,14 @@ class KubectlCmdClient(KubectlClient):
             CmdArg(value=namespace, name="namespace"),
             CmdArg(name="all-containers"),
             CmdArg(name="ignore-errors"),
+        )
+
+    def pod_cp(self, namespace: str, name: str, source: Path, destination: Path) -> str:
+        return self._call_kubectl(
+            CmdArg(value="cp"),
+            CmdArg(value=namespace, name="namespace"),
+            CmdArg(value=f"{name}:{source}"),
+            CmdArg(value=str(destination)),
         )
 
     def version_info_string(self, format: str | None = None) -> str:

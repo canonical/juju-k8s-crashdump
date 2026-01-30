@@ -56,6 +56,16 @@ def write_resource_info_to_file(kubectl_client: KubectlClient, namespace: str, r
             with open(path / f"{name}.log", "w+") as f:
                 f.write(kubectl_client.pod_logs(namespace, name))
 
+            source = Path("/var/log")
+            destination = path / f"{name}-var-log"
+            with open(f"{destination}.out", "w+") as f:
+                try:
+                    # only from the default container
+                    out = kubectl_client.pod_cp(namespace, name, source, destination)
+                except Exception as e:
+                    out = str(e)
+                f.write(out)
+
 
 def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, model: str, path: Path):
     with open(path / "juju-status.txt", "w+") as f:

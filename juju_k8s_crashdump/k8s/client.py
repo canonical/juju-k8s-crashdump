@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 
 class KubectlClient(ABC):
@@ -15,6 +16,10 @@ class KubectlClient(ABC):
 
     @abstractmethod
     def pod_logs(self, namespace: str, name: str) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def pod_cp(self, namespace: str, name: str, source: Path, destination: Path) -> str:
         raise NotImplementedError
 
     @abstractmethod
