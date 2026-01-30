@@ -3,4 +3,4 @@
 
 from .cmd import CmdArg, CmdClient, CmdError
 
-__all__ = [CmdArg, CmdClient, CmdError]
+__all__ = ["CmdArg", "CmdClient", "CmdError"]

@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+from pathlib import Path
 
 import yaml
 
@@ -12,11 +13,11 @@ class KubectlCmdClient(KubectlClient):
     cmd_client: CmdClient
     kubeconf: str
 
-    def __init__(self, kubeconf, cmd_client: CmdClient = None):
+    def __init__(self, kubeconf, cmd_client: CmdClient | None = None):
         self.kubeconf = kubeconf
         self.cmd_client = cmd_client if cmd_client is not None else CmdClient()
 
-    def _call_kubectl(self, *args: list[CmdArg]) -> str:
+    def _call_kubectl(self, *args: CmdArg) -> str:
         return self.cmd_client.call(CmdArg(value="kubectl"), CmdArg(value=self.kubeconf, name="kubeconfig"), *args)
 
     def get_resources(self, namespace: str, resource: str) -> list[str]:
@@ -47,6 +48,14 @@ class KubectlCmdClient(KubectlClient):
             CmdArg(value=namespace, name="namespace"),
             CmdArg(name="all-containers"),
             CmdArg(name="ignore-errors"),
+        )
+
+    def pod_cp(self, namespace: str, name: str, source: Path, destination: Path) -> str:
+        return self._call_kubectl(
+            CmdArg(value="cp"),
+            CmdArg(value=namespace, name="namespace"),
+            CmdArg(value=f"{name}:{source}"),
+            CmdArg(value=str(destination)),
         )
 
     def version_info_string(self, format: str | None = None) -> str:
