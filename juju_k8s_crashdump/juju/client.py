@@ -30,3 +30,7 @@ class JujuClient(ABC):
         self, controller: str, model: str, entity_type: str, entity_name: str, format: str = "tabular"
     ) -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def storage_string(self, controller: str, model: str, format: str = "tabular") -> str:
+        raise NotImplementedError

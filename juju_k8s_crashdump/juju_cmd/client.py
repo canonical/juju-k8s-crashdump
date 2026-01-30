@@ -70,3 +70,10 @@ class JujuCmdClient(JujuClient):
             CmdArg(name="model", value=f"{controller}:{model}"),
             CmdArg(value=entity_name),
         )
+
+    def storage_string(self, controller: str, model: str, format: str = "tabular") -> str:
+        return self._call_juju(
+            CmdArg(value="storage"),
+            CmdArg(name="model", value=f"{controller}:{model}"),
+            CmdArg(name="format", value=format),
+        )

@@ -94,6 +94,9 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
     with open(path / "db-dump.yaml", "w+") as f:
         f.write(juju_client.dump_db(controller, model, format="yaml"))
 
+    with open(path / "juju-storage.yaml", "w+") as f:
+        f.write(juju_client.storage_string(controller, model, format="yaml"))
+
     # status logs are written into the status-log directory as such:
     # status-log/
     #   ├── application-<app-name>.txt
