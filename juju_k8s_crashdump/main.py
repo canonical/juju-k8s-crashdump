@@ -133,7 +133,7 @@ def main():
         for namespace in get_namespaces(juju_client, args.controller):
             namespace_dir = tempdir / namespace
             namespace_dir.mkdir()
-            for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service"]:
+            for resource_type in ["pod", "replicaset", "deployment", "statefulset", "pvc", "service", "configmap"]:
                 resource_dir = namespace_dir / resource_type
                 resource_dir.mkdir()
                 write_resource_info_to_file(kubectl_client, namespace, resource_type, resource_dir)
