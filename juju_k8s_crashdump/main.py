@@ -92,7 +92,11 @@ def write_juju_model_info_to_file(juju_client: JujuClient, controller: str, mode
         f.write(bundle_string)
 
     with open(path / "db-dump.yaml", "w+") as f:
-        f.write(juju_client.dump_db(controller, model, format="yaml"))
+        try:
+            db_dump = juju_client.dump_db(controller, model, format="yaml")
+        except Exception as e:
+            db_dump = str(e)
+        f.write(db_dump)
 
     with open(path / "juju-storage.yaml", "w+") as f:
         f.write(juju_client.storage_string(controller, model, format="yaml"))
