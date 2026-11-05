@@ -26,8 +26,5 @@ line-length = 120
 [tool.ruff.lint]
 extend-select = ["I"]
 
-[project]
-name = "juju-k8s-crashdump"
-
-[project.scripts]
+[tool.poetry.scripts]
 juju-k8s-crashdump = "juju_k8s_crashdump.main:main"
